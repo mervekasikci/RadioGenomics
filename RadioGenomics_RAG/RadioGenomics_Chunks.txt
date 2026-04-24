@@ -1,0 +1,621 @@
+1 
+A Real Dataset-Based Simulation Study on RadioGenomics for Histology Classification 
+Merve Kasikci1, Erdal Cosgun2 and Erdem Karabulut1,* 
+1 Department of Biostatistics, Hacettepe University Faculty of Medicine, Ankara, Türkiye 
+2 Genomics Team, Microsoft Research, Redmond, WA, USA 2; e-mail@e-mail.com 
+* Correspondence: karabuluterdem@gmail.com 
+ 
+Abstract 
+Background: Radiogenomics is an emerging field that aims to improve clinical decision support by 
+combining image and genetic data. It is often challenging to collect both image and genetic data from the 
+same patients. This work aims to evaluate the performance of radiomics and genomics features on 
+classification the histology type of non-small cell lung cancer dataset.  
+Methods: The dataset comprises CT images and gene expressions obtained via RNA-sequencing. A 
+simulation study based on the properties of the real dataset was conducted. Two scenarios were 
+developed to examine the effect of class distribution. To investigate
+
+---
+ns obtained via RNA-sequencing. A 
+simulation study based on the properties of the real dataset was conducted. Two scenarios were 
+developed to examine the effect of class distribution. To investigate the impact of feature selection on 
+classification performance, analyses were performed with and without feature selection approaches. 
+Elastic Net, Random Forest, Support Vector Machines and XGBoost classification algorithms were used. 
+Mean test set performances of algorithms were compared under different scenarios.  
+Results: Radiomics model performances were lower than genomics and radiogenomics model in terms of 
+specificity and balanced accuracy. The results did not show any substantial difference between the 
+scenarios with and without feature selection. Conclusion: Based on the characteristics of the dataset used 
+in this simulation study, the diagnostic ability could potentially be enhanced by combining genetic data in 
+addition to image data. 
+ 
+Keywords: RadioGenomics, medical 
+
+---
+teristics of the dataset used 
+in this simulation study, the diagnostic ability could potentially be enhanced by combining genetic data in 
+addition to image data. 
+ 
+Keywords: RadioGenomics, medical imaging, genomics, machine learning. 
+ 
+1. INTRODUCTION 
+Radiogenomics is a novel approach to precision medicine that integrates radiomics and genomics. 
+Radiomics refers to image-based features associated with tumor phenotypes while genomics refers to 
+genetic features that reflect the genetic and molecular composition of the tumor. Radiogenomics aims to 
+develop a customized strategy that delivers precisine medicine to each patient [1]. Integration of different 
+data sources may enhance disease prognosis and treatment results through more precise conclusions. 
+Researchers frequently favor machine learning methods in radiogenomics investigations due to their 
+ability to process large amounts of data efficiently.In recent years, there has been a substantial increase 
+in the interest in rad
+
+---
+chine learning methods in radiogenomics investigations due to their 
+ability to process large amounts of data efficiently.In recent years, there has been a substantial increase 
+in the interest in radiogenomics. 
+Before 2010, the primary use of radiogenomics was investigating the genetic components linked to 
+toxicity caused by radiation therapy. Over time, the field has expanded to include the combination of 
+radiomics and genomics, which allows for the prediction of cancer histology, gene mutations, and gene 
+expression status [2]. 
+Guo et al. [3] employed radiogenomics variables to predict clinical outcomes such as pathological 
+stage and lymph node metastases. Gallivanone et al. [4] conducted a study to classify subtypes of breast 
+cancer using miRNAs as genetic biomarkers and radiomics features by using TCGA datasets. Shboul and 
+Iftekharuddin [5] investigated the classification of TP53 mutation status. They used radiomics, genomics, 
+and radiogenomics features, respectively. Triv
+
+---
+s features by using TCGA datasets. Shboul and 
+Iftekharuddin [5] investigated the classification of TP53 mutation status. They used radiomics, genomics, 
+and radiogenomics features, respectively. Trivizakis et al. [6] combined radiomics and transcriptomics 
+features to classify histology subtypes, EGFR mutation status, and KRAS mutation status. Murphy et al. [7] 
+used medical images and micro-array gene expressions to predict biochemical recurrence and metastatic 
+disease in prostate cancer patients. Qureshi et al. [8] suggested combining genetic and imaging 
+characteristics in order to improve diagnostic accuracy in bladder cancer patients. 
+
+ 
+2 
+The majority of studies in the literature rely solely on image features or genetic factors. Particularly 
+in cancer research, combining these two different data sources seems promising. Integrating image and 
+genetic data in some research leads to improved classification performance. Nevertheless, this does not 
+apply to every study in the r
+
+---
+wo different data sources seems promising. Integrating image and 
+genetic data in some research leads to improved classification performance. Nevertheless, this does not 
+apply to every study in the radiogenomics field. Obtaining both image and genetic data from the same 
+patients is often impractical due to constraints such as cost, time, and labor. This study aims to investigate 
+the necessity of obtaining genetic data in addition to image data, or alternatively, the need to include 
+image data if genetic data is already available. Depending on the characteristics of the disease and the 
+data sources employed, there may be a range of answers to this research topic. In this regard, this research 
+was intended as a guiding study for clinicians. 
+The study aims to combine two different data sources, radiomics and genomics, for clinical decision-
+making with a simulation study based on a real dataset. It was planned to predict the histology subtype 
+of non-small cell lung cancer patients
+
+---
+ sources, radiomics and genomics, for clinical decision-
+making with a simulation study based on a real dataset. It was planned to predict the histology subtype 
+of non-small cell lung cancer patients from NSCLC dataset [9]. Radiomics and genomics variables were 
+obtained from CT-based medical images and RNA-sequence gene expressions, respectively. Scenarios 
+were included into the simulation study to evaluate the impact of class distributions, feature selection 
+approaches, and different classification methods. Class distribution was examined under two scenarios as 
+the original class ratio in the real dataset (unbalanced) and the adjusted balanced class ratio. Feature 
+selection was considered under three scenarios: without feature selection, performing feature selection 
+based on AUC values, and performing feaure selection by using Recursive Feature Elimination (RFE) 
+method. Elastic net regularized generalized linear models (EN), random forest (RF), support vector 
+machines (SVM), 
+
+---
+lues, and performing feaure selection by using Recursive Feature Elimination (RFE) 
+method. Elastic net regularized generalized linear models (EN), random forest (RF), support vector 
+machines (SVM), and XGBoost algorithms were employed for the classification analysis.  
+The structure of the paper is as follows. In Section 2, we provide information about the real dataset 
+and simulation study. In Section 3, we present the findings of the simulation study. In Section 4, we 
+evaluate our results in light of the findings of related studies in the literature. In Section 5, we provide an 
+overview of the study and further research. 
+2. MATERIALS AND METHODS 
+2.1. Dataset 
+The Non-Small Cell Lung Cancer (NSCLC) dataset [9] from The Cancer Imaging Archive (TCIA) was 
+used in this study. This dataset is well-suited for radiogenomics studies as it includes both the imaging and 
+genetic information of patients. The dataset provides CT images in DICOM format. Radiomics features 
+were extracted di
+
+---
+set is well-suited for radiogenomics studies as it includes both the imaging and 
+genetic information of patients. The dataset provides CT images in DICOM format. Radiomics features 
+were extracted directly from DICOM data using the radiogenomics analysis pipeline notebook on GitHub 
+[10]. A total of 32 radiomics features were derived by utilizing this notebook, consisting of 20 features 
+related to tumor density and 12 features related to tumor shape. The genetic data source in the database 
+is RNA-seq gene expression data normalized by Fragments Per Kilobase of transcript per Million mapped 
+reads (FPKM) method. After excluding genes with missing values, a total of 5268 genes remained. The 
+dataset includes 87 patients with CT images and 130 patients with RNA-seq gene expressions. In our study, 
+the histology type (squamous cell carcinoma or adenocarcinoma) was selected as the binary class variable. 
+Patients who had both CT image and gene expression data, and whose histology type wa
+
+---
+ study, 
+the histology type (squamous cell carcinoma or adenocarcinoma) was selected as the binary class variable. 
+Patients who had both CT image and gene expression data, and whose histology type was identified were 
+selected. Consequently, the study’s sample comprises 58 patients. 42 of the 58 patients were diagnosed 
+with adenocarcinoma, and the remaining 16 patients were diagnosed with squamous cell carcinoma.  
+Radiomics and genomics features have a wide range of values in general. Therefore, it is preferable 
+to use transformation to standardize the feature set and reduce the impact of outliers. In this work, z 
+standardization was performed for the radiomics features and logarithmic transformation was applied to 
+the normalized genomics features. Consequently, the pre-processing step was concluded after radiomics 
+and genomics features were obtained. 
+
+ 
+3 
+2.2. Simulation Study 
+We conducted a Monte Carlo simulation study based on the pre-processed NSCLC radiogenomics 
+dataset
+
+---
+ep was concluded after radiomics 
+and genomics features were obtained. 
+
+ 
+3 
+2.2. Simulation Study 
+We conducted a Monte Carlo simulation study based on the pre-processed NSCLC radiogenomics 
+dataset. The steps of the simulation study are explained below. Figure 1 also provides a summary of the 
+simulation study’s steps. 
+Data Simulation: BinNor R package [11] was used for data simulation. After the pre-processing step, one 
+class variable and 5300 numerical variables consisting of radiomics and genomics features remained in 
+the dataset.  BinNor package allows generating of binary class variable and continuous variables 
+simultaneously. In addition to the number of variables, the following characteristics of the real dataset 
+were used in the simulation study: sample size (n=58), class ratio (p=42/58), correlation matrix, mean and 
+variance vectors for numerical variables. Additionally, an alternative scenario was generated by setting 
+the class ratio to 0.50, aiming to obtain a bala
+
+---
+atio (p=42/58), correlation matrix, mean and 
+variance vectors for numerical variables. Additionally, an alternative scenario was generated by setting 
+the class ratio to 0.50, aiming to obtain a balanced class distribution. 
+Splitting The Dataset: The simulated dataset was divided into 70% train set and 30% test set. The dataset 
+could be divided into three sets at this step: the train set, validation set, and test set. However, the dataset 
+was split into two sets rather than three sets due to the low number of observations. The train set was 
+used in the feature selection and classification model development. The test set was used to assess the 
+performance of the classification models. 
+Feature Selection: Three different approaches were used to examine the effects of feature selection. First, 
+all features were included without employing any feature selection procedure. Second, a univariate 
+approach was used, which allows features to be evaluated individually. The area under the R
+
+---
+ First, 
+all features were included without employing any feature selection procedure. Second, a univariate 
+approach was used, which allows features to be evaluated individually. The area under the ROC Curve 
+(AUC) values of all features were calculated and features with AUC values exceeding 0.60 were selected. 
+It was considered to take 0.70 as the cut-off point at first. However, there was no AUC value greater than 
+0.70 in the radiomics features. Therefore, the cut-off point was determined as 0.60 for conducting feature 
+selection on both radiomics and genomics variables. Third, RFE, a multiple approach for evaluating the 
+effects of variables simultaneously, was performed. RFE is a tree-based algorithm that iteratively 
+eliminates the features that are deemed less significant. RFE is capable of dealing with multicollinearity, 
+which is common in radiomics features [12]. caTools R package [13] and caret R package [14] were used 
+to calculate AUC values and to perform RFE, respectiv
+
+---
+capable of dealing with multicollinearity, 
+which is common in radiomics features [12]. caTools R package [13] and caret R package [14] were used 
+to calculate AUC values and to perform RFE, respectively.  
+Development of Classification Models: Three different sets of variables were used for building 
+classification models.  
+• 
+The first variable set contains radiomics features only (Radiomics). 
+• 
+The second variable set contains genomics features only (Genomics). 
+ 
+• 
+The third variable set includes radiomics and genomics features together (RadioGenomics). 
+In order to investigate the effects of different classification algorithms, commonly used algorithms 
+were preferred. The selected algorithms were Elastic net regularized generalized linear models, random 
+forest, support vector machines with different kernel functions (linear, radial basis, and polynomial), and 
+XGBoost. During the training phase of the classification models, 5-fold cross-validation and hyper-
+parameter tuning
+
+---
+chines with different kernel functions (linear, radial basis, and polynomial), and 
+XGBoost. During the training phase of the classification models, 5-fold cross-validation and hyper-
+parameter tuning were employed to prevent overfitting. Caret package was used for model building and 
+hyper-parameter optimization by using train function and tuneLength argument. tuneLength argument 
+enables automatic tuning of model hyper-parameters. 
+Evaluating The Model Performance: The test set performances of the classification models were assessed 
+in terms of sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), 
+balanced accuracy, F1 score, and Matthew‚s correlation coefficient (MCC). Accuracy, which is a 
+fundamental measure of classification performance, was not included in the results due to the negative 
+impact of class imbalance on this measure [15]. The calculation of performance metrics is presented in 
+
+ 
+4 
+Table 1. This simulation study was conducte
+
+---
+t included in the results due to the negative 
+impact of class imbalance on this measure [15]. The calculation of performance metrics is presented in 
+
+ 
+4 
+The properties of process, a single iteration indicated on the flowchart (Figure 1) took approximately one hour. The study was concluded with 250 iterations. The codes of the study were made available on GitHub via this link: https://github.com/mervekasikci/RadioGenomics. This repository also includes the radiomics and 
+genomics features that are used. 
+Table 1. The formulas of performance metrics. 
+Metric 
+Formula 
+Sensitivity 
+TP/(TP+FN) 
+Specificity 
+TN/(TN+FP) 
+PPV 
+TP/(TP+FP) 
+NPV 
+TN/(TN+FN) 
+Balanced Accuracy 
+(Sensitivity+Specificity)/2 
+F1 score 
+(2×PPV×Sensitivity)/(PPV+Sensitivity) 
+MCC 
+(TP×TN-FP×FN)/!(TP +  FP)(FN +  TN)(TP +  FN)(FP +  TN) 
+TP: True positive, TN: True negative, FP: False positive, FN: False negative. 
+ 
+Table 2. Virtual machi
+
+---
+PV×Sensitivity)/(PPV+Sensitivity) 
+MCC 
+(TP×TN-FP×FN)/!(TP +  FP)(FN +  TN)(TP +  FN)(FP +  TN) 
+TP: True positive, TN: True negative, FP: False positive, FN: False negative. 
+ 
+Table 2. Virtual machine configurations. 
+Name 
+Standard_DS15_v2 
+vCPU 
+20 
+Memory: GiB 
+140 
+Temp storage (SSD) GiB 
+280 
+Max data disks 
+64 
+Max uncached disk throughput: IOPS/MBps 
+80000/640 
+Max NICs 
+8 
+CPU: Central processing unit; SSD: Solid state drive; IOPS: Input/output operations per second; NICs: Network 
+interfaces. 
+3. RESULTS 
+The simulation study was conducted to classify the histology type, with a particular emphasis on 
+different data sources (radiomics, genomics, and radiogenomics). The study also compared the effects of 
+various machine learning models, feature selection methods, and class ratio scenarios on classification 
+performance. The test set performances were evaluated by taking the mean of 250 iterations. The Table 
+3 and Table 4 in Appendix contain detailed results (mean ± standard
+
+---
+ scenarios on classification 
+performance. The test set performances were evaluated by taking the mean of 250 iterations. The Table 
+3 and Table 4 in Appendix contain detailed results (mean ± standard deviation) for all the performance 
+metrics. Figure 2-5 presents the metrics of sensitivity, specificity, balanced accuracy, and F1 score. The 
+graphs contain three vertical grids for feature selection (None, AUC, RFE) and two horizontal grids that 
+display the class ratio (unbalanced and balanced). Data sources (Radiomics, Genomics, and 
+RadioGenomics) appear on the x-axis, and the different colored lines represent the classification methods. 
+ 
+Results on sensitivity are presented in Figure 2. The mean sensitivity values range between 0.819 and 
+0.979 in the unbalanced scenario and between 0.529 and 0.691 in the balanced scenario. The means in 
+the unbalanced scenario are between 0.834 and 0.979 when no feature selection is conducted, 0.819 and 
+0.975 when feature selection is performed
+
+---
+0.529 and 0.691 in the balanced scenario. The means in 
+the unbalanced scenario are between 0.834 and 0.979 when no feature selection is conducted, 0.819 and 
+0.975 when feature selection is performed using AUC, 0.824 and 0.974 when feature selection is 
+performed using RFE. In the balanced scenario, the means are in the range of 0.529 and 0.691 when no 
+variable selection is conducted, 0.556 and 0.686 when feature selection is performed using AUC, and 
+
+ 
+5 
+0.546 and 0.663 when variable selection is performed using RFE. In the unbalanced scenario, SVM (linear, 
+radial-basis, and polynomial) radiomics models have greater mean sensitivities than their genomics and 
+radiogenomics models. In the balanced scenario, the mean sensitivity values of the radiomics models for 
+all classification methods are lower than those of respective genomics and radiogenomics models. In this 
+scenario, SVM-linear genomics and radiogenomics models have the highest sensitivity means, followed 
+by elastic net
+
+---
+thods are lower than those of respective genomics and radiogenomics models. In this 
+scenario, SVM-linear genomics and radiogenomics models have the highest sensitivity means, followed 
+by elastic net. 
+The mean specificity values are summarized in Figure 3. The mean specificity values in the 
+unbalanced scenario vary from 0.041 to 0.319, whereas in the balanced scenario, they range from 0.501 
+to 0.686. The means in the unbalanced scenario range from 0.041 to 0.277 when no feature selection is 
+performed, 0.061 to 0.319 when AUC is used, and 0.062 to 0.313 when RFE is used. In the balanced 
+scenario, the means are between 0.501 and 0.667 when no feature selection is conducted, 0.520 and 
+0.686 when feature selection is performed using AUC, and 0.508 and 0.653 when feature selection is 
+performed using RFE. The radiogenomic models of the EN method have the highest specificity mean in 
+both balanced and unbalanced scenarios when feature selection is conducted with AUC approach. 
+Figure 
+
+---
+rformed using RFE. The radiogenomic models of the EN method have the highest specificity mean in 
+both balanced and unbalanced scenarios when feature selection is conducted with AUC approach. 
+Figure 4 provides the mean balanced accuracies. In the unbalanced scenario, the mean balanced 
+accuracy values range from 0.508 to 0.607, while in the balanced scenario, they range from 0.522 to 0.680. 
+In the unbalanced scenario, the range of the balanced accuracy means is 0.510 to 0.591 without feature 
+selection, 0.511 to 0.607 with AUC, and 0.508 to 0.599 with RFE. In the balanced scenario, the range of 
+the mean balanced accuracy is 0.522 to 0.677 when feature selection is not applied, 0.539 to 0.680 when 
+AUC is used, and 0.527 to 0.654 when RFE is used. The radiogenomic models of the SVM-linear method 
+provide the highest means of specificity in both balanced and unbalanced scenarios when feature 
+selection is performed using the AUC approach. Based on the graph, EN method demonstrates a 
+
+
+---
+r method 
+provide the highest means of specificity in both balanced and unbalanced scenarios when feature 
+selection is performed using the AUC approach. Based on the graph, EN method demonstrates a 
+performance that is close to SVM-linear in terms of balanced accuracy. 
+The mean F1 scores are presented in Figure 5. The values differ between 0.776 and 0.839 in the 
+unbalanced scenario, whereas in the balanced scenario, they change between 0.536 and 0.686. In the 
+unbalanced scenario, the range of the means of F1 scores is 0.783 to 0.839 when feature selection is not 
+performed, 0.776 to 0.839 when AUC is used, and 0.780 to 0.836 when RFE is used. The range of the mean 
+F1 scores in the balanced scenario is 0.548 to 0.686 when feature selection is not used, 0.551 to 0.680 
+when AUC is used, and 0.536 to 0.653 when RFE is used. SVM-linear method generally has the highest F1 
+means in the unbalanced case. In the balanced scenario, the mean F1 scores of the radiomics models of 
+all methods
+
+---
+ and 0.536 to 0.653 when RFE is used. SVM-linear method generally has the highest F1 
+means in the unbalanced case. In the balanced scenario, the mean F1 scores of the radiomics models of 
+all methods are lower than their genomics and radiogenomics models. The highest F1 score means belong 
+to SVM-linear radiogenomics and genomics models when no variable selection is performed. 
+4. DISCUSSION  
+The field of radiogenomics is experiencing a surge in interest due to the rising number of yearly 
+publications and its remarkable growth rate, particularly since 2017 [2]. Publications mostly focus on 
+survival analysis, clustering, and classification. This study is centered around a classification task. Studies 
+on classification using radiogenomics typically rely on the analysis of one or a limited number of datasets. 
+Although simulation studies exist in the literature focusing on survival analysis [16] and variable selection 
+[17] with radiogenomics, there is currently no study specifically
+
+---
+ed number of datasets. 
+Although simulation studies exist in the literature focusing on survival analysis [16] and variable selection 
+[17] with radiogenomics, there is currently no study specifically addressing classification. In this work, a 
+simulation study based on a real dataset was conducted in order to provide the generalizability of the 
+findings on histology classification. Given that the simulation study relies on the properties of a single 
+dataset, the findings are constrained solely to this particular dataset. 
+Compared with using a single data source, performing radiogenomic studies can be challenging. 
+Accessing different data sources for the same patients is mostly difficult, leading to a restricted amount 
+
+ 
+6 
+of observations. Qureshi et al. [8] used 28 patients as train set including both medical images and RNA-
+seq data. A study by Gallivanone et al. [4] examined MRI-based features and microRNAs in 37 patients 
+from the breast cancer dataset provided by the TCGA/T
+
+---
+n set including both medical images and RNA-
+seq data. A study by Gallivanone et al. [4] examined MRI-based features and microRNAs in 37 patients 
+from the breast cancer dataset provided by the TCGA/TCIA databases. Guo et al. [3] used magnetic 
+resonance imaging and genetic data of 91 breast cancer patients. The total number of observations is 
+limited to 58 due to the inclusion of patients with both CT images and RNA-seq data in our study. In 
+addition to the limited quantity of observations, unbalanced class distributions can be observed [3,6,7]. 
+In this study, we addressed class imbalance in two scenarios. First, we generated the data set to align with 
+the original distribution of classes (unbalanced). Second, we obtained the data by ensuring that the class 
+ratio was balanced. As a result, while models typically predicted the majority class more often in 
+unbalanced scenarios, sensitivity and F1 score were generally greater compared to the balanced 
+scenarios. The balanced scenar
+
+---
+esult, while models typically predicted the majority class more often in 
+unbalanced scenarios, sensitivity and F1 score were generally greater compared to the balanced 
+scenarios. The balanced scenario exhibited improved specificity and balanced accuracy. In both 
+unbalanced and balanced scenarios, SVM-linear and EN algorithms have garnered attention among 
+classification methods for their genomics and radiogenomics models classification performances, 
+particularly in terms of balanced accuracy. SVM algorithm was included in the study with three different 
+kernel functions (linear, radial-basis and polynomial). The superior performance of the linear kernel 
+function may be attributed to the construction of a linear structure throughout the data generation 
+process. 
+As part of the simulation study, we also aimed to investigate the effects of feature selection. The 
+issue of the strong correlation between features might occur, particularly for radiomics features. 
+Genomics datasets can
+
+---
+ion study, we also aimed to investigate the effects of feature selection. The 
+issue of the strong correlation between features might occur, particularly for radiomics features. 
+Genomics datasets can also be high-dimensional. For these reasons, researchers may need to perform 
+feature selection. There are studies that employ different methods for selecting variables, including 
+univariate approaches such as analysis of variance, Student’s t-test, differential gene expression analysis 
+[6–8], and multiple models such as RFE and LASSO regression [3,5]. We conducted classification analysis 
+using three different approaches for feature selection: without feature selection, with feature selection 
+based on a univariate method using AUC, and with feature selection based on an approach that evaluates 
+the relationships between features using RFE. According to the results of our study, there was no notable 
+difference in classification performance among these three approaches. 
+Radiogenomics 
+
+---
+uates 
+the relationships between features using RFE. According to the results of our study, there was no notable 
+difference in classification performance among these three approaches. 
+Radiogenomics involves the analysis of both imaging and genetic features of individuals. Acquisition 
+of such thorough data for healthy individuals typically is not necessary. Therefore, the diagnosis of the 
+disease (distinguishing between diseased and non-diseased cases) is generally not the focus of 
+radiogenomics studies. Radiogenomics research aims to develop models for predicting disease sub-type, 
+mutation status, and disease progression. Researchers aim to integrate comprehensive information by 
+using different data sources collaboratively in this field. It is crucial to emphasize that the study's findings 
+are significantly impacted by the quality of the datasets. In particular with medical image data the 
+modality of imaging methods, the resolution of images, and segmentation approaches have a
+
+---
+indings 
+are significantly impacted by the quality of the datasets. In particular with medical image data the 
+modality of imaging methods, the resolution of images, and segmentation approaches have an important 
+influence on the predictive power of the models. Depending on the quality of the datasets and the 
+predictive ability of the variables, the predictive model results may not be improved by integrating data 
+from various sources. 
+The findings of this simulation study indicate that incorporating genomics alongside radiomics 
+enhances classification performance. However, classification performance is not increasing by the use of 
+extra image data in addition to genetic data. Similarly, in the study conducted by Murphy et al. [7] the use 
+of genomics alongside radiomics impoved the AUC of prediction model for biochemical recurrence. 
+However, the AUC that the researchers obtained by using genomics only was close to that of the 
+radiogenomics model. Guo et al. [3] concluded that th
+
+---
+C of prediction model for biochemical recurrence. 
+However, the AUC that the researchers obtained by using genomics only was close to that of the 
+radiogenomics model. Guo et al. [3] concluded that the integration of radiomics and genomics did not 
+yield any significant benefits, suggesting that this may be due to the limited sample size. Gallivanone et 
+al. [4], Shboul et al. [5], and Qureshi et al. [8] demonstrated that the integration of radiomics and genomics 
+
+ 
+7 
+features enhanced classification model performance compared to the use of radiomics and genomics 
+models in only. Nevertheless, due to the limited sample sizes, and the minimal performance differences 
+across the models, it is not possible to evaluate the significance of the reported improvements. 
+This simulation study has some limitations. These limitations can be summarized as dependency on 
+a single real dataset, a small number of observations, the limited number of feature selection and 
+classification methods. Des
+
+---
+ some limitations. These limitations can be summarized as dependency on 
+a single real dataset, a small number of observations, the limited number of feature selection and 
+classification methods. Despite the given limitations, this is the first simulation study to compare the 
+classification performances of different data sources regarding radiogenomics. Also, the data generation 
+process was time-consuming due to the large number of variables in the genomics dataset. By including 
+different scenarios, the simulation study required substantial computational resources and time. 
+5. CONCLUSION AND FUTURE WORK 
+The effects of using radiomics and genomics data sources separately and in combination on 
+classification were assessed in this research through a simulation study. Based on the results, it could be 
+beneficial for clinicians to also obtain genetic data in case they only possess medical image data. However, 
+when genomics data is already available, the integration of radiomics dat
+
+---
+ts, it could be 
+beneficial for clinicians to also obtain genetic data in case they only possess medical image data. However, 
+when genomics data is already available, the integration of radiomics data may not be necessary. We also 
+evaluated the effect of the class ratio and feature selection on classification performances using different 
+algorithms. We believe that the findings of the study may serve as a valuable resource for clinicians. This 
+simulation study was conducted using a single radiogenomics dataset. 
+The following topics are thought to be potential future research in the radiogenomics: 
+• 
+Expanding radiogenomics research across various diseases and data types: Acquiring radiogenomics 
+data is challenging due to the financial constraints and the difficulties in data gathering. The type and 
+quality of the datasets also influence the results of the study. These limitations indicate a necessity 
+for further research in this field, utilizing data sets that encompass a grea
+
+---
+ng. The type and 
+quality of the datasets also influence the results of the study. These limitations indicate a necessity 
+for further research in this field, utilizing data sets that encompass a greater number of observations, 
+a wider variety of disease types, and a more diverse collection of imaging and genetic data. 
+ 
+• 
+Evaluating feature selection techniques more comprehensively: For controlling the simulation time, 
+we restricted the feature selection to three strategies. The feature selection approaches used in this 
+study did not have an notable effect on the results. Future studies may investigate feature selection 
+approaches not included in this study such as Boruta and SHapley Additive exPlanations (SHAP). 
+ 
+• 
+Investigating the potential of AI integration in radiogenomics research: Artificial intelligence (AI) 
+approaches based on Large Language Models (LLMs) are highly capable of processing large amounts 
+of data and performing various tasks. The application of these m
+
+---
+esearch: Artificial intelligence (AI) 
+approaches based on Large Language Models (LLMs) are highly capable of processing large amounts 
+of data and performing various tasks. The application of these models is increasing in medicine. In 
+radiomics, LLM is utilized for feature extraction from medical images, interpretation of results, and 
+integration with clinical information [18]. In genomics, LLMs are used for identifying genomic 
+patterns, predicting protein structures, and understanding genetic variation [19]. In the field of 
+radiogenomics, LLMs can be designed to extract features from large-scale medical images and 
+complex genetic data sets simultaneously, revealing the correlations between the features and 
+assessing the clinical outcomes. 
+ 
+ 
+
+ 
+8 
+REFERENCES  
+1. Demetriou, D.; Lockhat, Z.; Brzozowski, L.; Saini, K.S.; Dlamini, Z.; Hull, R.  The Convergence of Radiology and 
+Genomics: Advancing Breast Cancer Diagnosis with Radiogenomics. Cancers 2024, 16, 1076.  
+2. Wang, M.;
+
+---
+ockhat, Z.; Brzozowski, L.; Saini, K.S.; Dlamini, Z.; Hull, R.  The Convergence of Radiology and 
+Genomics: Advancing Breast Cancer Diagnosis with Radiogenomics. Cancers 2024, 16, 1076.  
+2. Wang, M.; Peng, Y.; Wang, Y.; Luo, D.; et al. Research Trends and Evolution in Radiogenomics (2005-2023): 
+Bibliometric Analysis. Interactive Journal of Medical Research 2024, 13, e51347.  
+3. Guo, W.; Li, H.; Zhu, Y.; Lan, L.; Yang, S.; Drukker, K.; Morris, E.; Burnside, E.; Whitman, G.; Giger, M.L.; et al. 
+Prediction of clinical phenotypes in invasive breast carcinomas from the integration of radiomics and genomics 
+data. Journal of medical imaging 2015, 2, 041007–041007. 
+ 
+4. Gallivanone, F.; Cava, C.; Corsi, F.; Bertoli, G.; Castiglioni, I. In Silico approach for the definition of 
+radiomiRNomic signatures for breast Cancer differential diagnosis. International Journal of Molecular Sciences 
+2019, 20, 5825. 
+ 
+5. Shboul, Z.A.; Iftekharuddin, K.M.  Efficacy of radiomics and genomics in predict
+
+---
+signatures for breast Cancer differential diagnosis. International Journal of Molecular Sciences 
+2019, 20, 5825. 
+ 
+5. Shboul, Z.A.; Iftekharuddin, K.M.  Efficacy of radiomics and genomics in predicting TP53 mutations in diffuse 
+lower grade glioma. In Proceedings of the Medical Imaging 2020: Biomedical Applications in Molecular, 
+Structural, and Functional Imaging. SPIE, 2020, Vol. 11317, pp. 238–244. 
+6. Trivizakis, E.; Souglakos, J.; Karantanas, A.; Marias, K. Deep radiotranscriptomics of non-small cell lung 
+carcinoma for assessing molecular and histology subtypes with a data-driven analysis. Diagnostics 2021, 11, 
+2383. 
+7. Murphy, R.; Payan, N.; Osman, S.; Prise, K.; Hounsell, A.; O’Sullivan, J.; McGarry, C.; Jain, S. PO-1769 Prostate 
+cancer radiogenomics machine learning classification for predicting disease progression. Radiotherapy and 
+Oncology 2022, 170, S1572– S1574. 
+8. Qureshi, T.A.; Chen, X.; Xie, Y.; Murakami, K.; Sakatani, T.; Kita, Y.; Kobayashi, T.; Miyake, M.; Kno
+
+---
+ation for predicting disease progression. Radiotherapy and 
+Oncology 2022, 170, S1572– S1574. 
+8. Qureshi, T.A.; Chen, X.; Xie, Y.; Murakami, K.; Sakatani, T.; Kita, Y.; Kobayashi, T.; Miyake, M.; Knott, S.R.; Li, D.; 
+et al. MRI/RNA- Seq-Based Radiogenomics and Artificial Intelligence for More Accurate Staging of Muscle-
+Invasive Bladder Cancer. International Journal of Molecular Sciences 2023, 25, 88. 
+9. Bakr, S.; Gevaert, O.; Echegaray, S.; Ayers, K.; Zhou, M.; Shafiq, M.; Zheng, H.; Zhang, W.; Leung, A.; Kadoch, M.; 
+et al. Data for NSCLC radiogenomics collection. The Cancer Imaging Archive 2017, 10, K9. 
+10. Microsoft. 
+genomicsnotebook, 
+2022. 
+RadioGenomics 
+analysis 
+pipeline: 
+https://github.com/microsoft/genomicsnotebook/blob/ main/sample-notebooks/radiogenomics.ipynb. 
+ 
+11. Demirtas, H.; Amatya, A.; Doganay, B. BinNor: An R package for concurrent generation of binary and normal data. Communications in Statistics-Simulation and Computation 2014, 43, 569–579. 
+ 
+12. Provenz
+
+---
+mirtas, H.; Amatya, A.; Doganay, B. BinNor: An R package for concurrent generation of binary and normal 
+data. Communications in Statistics-Simulation and Computation 2014, 43, 569–579. 
+ 
+12. Provenzano, D.; Washington, S.D.; Baraniuk, J.N. A machine learning approach to the differentiation of 
+functional magnetic resonance imaging data of chronic fatigue syndrome (CFS) from a sedentary control. 
+Frontiers in computational neuroscience 2020, 14, 2. 
+13. Tuszynski, J. caTools: Tools: Moving Window statistics, GIF, Base64, ROC AUC. etc (1.18. 2) https://CRAN. R-
+project. org/package caTools 2021. 
+ 
+14. Kuhn, M. Building predictive models in R using the caret package. Journal of statistical software 2008, 28, 1–
+26. 
+15. Fernández, A.; García, S.; Galar, M.; Prati, R.C.; Krawczyk, B.; Herrera, F.; Fernández, A.; García, S.; Galar, M.; 
+Prati, R.C.; et al. Performance measures. Learning from Imbalanced Data Sets 2018, pp. 47–61. 
+ 
+16. Ren, B.; Mazurowski, M.A. Statistical aspects of rad
+
+---
+ra, F.; Fernández, A.; García, S.; Galar, M.; 
+Prati, R.C.; et al. Performance measures. Learning from Imbalanced Data Sets 2018, pp. 47–61. 
+ 
+16. Ren, B.; Mazurowski, M.A. Statistical aspects of radiogenomics: can radiogenomics models be used to aid 
+prediction of outcomes in cancer patients? In Proceedings of the Medical Imaging 2017: Image Perception, 
+Observer Performance, and Technology Assessment. SPIE, 2017, Vol. 10136, pp. 448–453.  
+17. Mohammed, S.; Kurtek, S.; Bharath, K.; Rao, A.; Baladandayuthapani, V. Tumor radiogenomics in gliomas with 
+Bayesian layered variable selection. Medical Image Analysis 2023, 90, 102964. 
+18. Sun, D.; Hadjiiski, L.; Gormley, J.; Chan, H.P.; Caoili, E.; Cohan, R.; Alva, A.; Bruno, G.; Mihalcea, R.; Zhou, C.; et 
+al. Outcome prediction using multi-modal information: integrating large language model-extracted clinical 
+information and image analysis. Cancers 2024, 16, 2402.  
+19. Sarumi, O.A.; Heider, D. Large language models and their application
+
+---
+dal information: integrating large language model-extracted clinical 
+information and image analysis. Cancers 2024, 16, 2402.  
+19. Sarumi, O.A.; Heider, D. Large language models and their applications in bioinformatics.  Computational and 
+Structural Biotechnology Journal 2024.
+

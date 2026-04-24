@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1500" viewBox="0 0 1100 1500">
+  <defs>
+    <style>
+      .title { font: 700 28px Arial, Helvetica, sans-serif; fill: #000; }
+      .subtitle { font: 600 18px Arial, Helvetica, sans-serif; fill: #000; }
+      .label { font: 500 15px Arial, Helvetica, sans-serif; fill: #000; }
+      .small { font: 500 13px Arial, Helvetica, sans-serif; fill: #000; }
+      .box { fill: none; stroke: #000; stroke-width: 2; }
+      .arrow { fill: none; stroke: #000; stroke-width: 2; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#000" />
+    </marker>
+  </defs>
+
+  <text x="550" y="45" text-anchor="middle" class="title">RadioGenomics Methodological Pipeline</text>
+  <text x="550" y="72" text-anchor="middle" class="small">Derived only from the study structure described in RadioGenomics_chunks.txt</text>
+
+  <rect x="270" y="110" width="560" height="80" rx="6" class="box"/>
+  <text x="550" y="145" text-anchor="middle" class="subtitle">1. Define Clinical Endpoint</text>
+  <text x="550" y="172" text-anchor="middle" class="label">Binary histology classification: adenocarcinoma vs squamous cell carcinoma</text>
+
+  <line x1="550" y1="190" x2="550" y2="235" class="arrow"/>
+
+  <rect x="270" y="235" width="560" height="95" rx="6" class="box"/>
+  <text x="550" y="270" text-anchor="middle" class="subtitle">2. Assemble Source Data</text>
+  <text x="550" y="298" text-anchor="middle" class="label">CT images in DICOM format + RNA-seq gene expression data</text>
+  <text x="550" y="322" text-anchor="middle" class="small">Retain patients with both modalities and known histology labels</text>
+
+  <line x1="550" y1="330" x2="550" y2="375" class="arrow"/>
+
+  <rect x="270" y="375" width="560" height="95" rx="6" class="box"/>
+  <text x="550" y="410" text-anchor="middle" class="subtitle">3. Construct Analysis Cohort</text>
+  <text x="550" y="438" text-anchor="middle" class="label">Final sample: 58 patients</text>
+  <text x="550" y="462" text-anchor="middle" class="small">42 adenocarcinoma, 16 squamous cell carcinoma</text>
+
+  <line x1="550" y1="470" x2="550" y2="515" class="arrow"/>
+
+  <rect x="120" y="515" width="360" height="125" rx="6" class="box"/>
+  <text x="300" y="550" text-anchor="middle" class="subtitle">4A. Radiomics Processing</text>
+  <text x="300" y="578" text-anchor="middle" class="label">Extract 32 radiomics features</text>
+  <text x="300" y="604" text-anchor="middle" class="small">20 density features + 12 shape features</text>
+  <text x="300" y="628" text-anchor="middle" class="small">Apply z-standardization</text>
+
+  <rect x="620" y="515" width="360" height="125" rx="6" class="box"/>
+  <text x="800" y="550" text-anchor="middle" class="subtitle">4B. Genomics Processing</text>
+  <text x="800" y="578" text-anchor="middle" class="label">Filter missing genes, retain 5268 genes</text>
+  <text x="800" y="604" text-anchor="middle" class="small">RNA-seq values normalized by FPKM</text>
+  <text x="800" y="628" text-anchor="middle" class="small">Apply log transformation</text>
+
+  <line x1="300" y1="640" x2="300" y2="700" class="arrow"/>
+  <line x1="800" y1="640" x2="800" y2="700" class="arrow"/>
+  <line x1="300" y1="700" x2="550" y2="700" class="arrow"/>
+  <line x1="800" y1="700" x2="550" y2="700" class="arrow"/>
+
+  <rect x="250" y="700" width="600" height="95" rx="6" class="box"/>
+  <text x="550" y="735" text-anchor="middle" class="subtitle">5. Build Feature Sets</text>
+  <text x="550" y="763" text-anchor="middle" class="label">Radiomics only · Genomics only · Combined RadioGenomics</text>
+  <text x="550" y="787" text-anchor="middle" class="small">Integrated dataset: 1 class variable + 5300 numerical predictors</text>
+
+  <line x1="550" y1="795" x2="550" y2="840" class="arrow"/>
+
+  <rect x="230" y="840" width="640" height="130" rx="6" class="box"/>
+  <text x="550" y="875" text-anchor="middle" class="subtitle">6. Simulate Datasets from Real-Data Properties</text>
+  <text x="550" y="903" text-anchor="middle" class="label">Preserve sample size, class ratio, correlation, means, and variances</text>
+  <text x="550" y="929" text-anchor="middle" class="small">Scenario 1: original unbalanced ratio · Scenario 2: balanced ratio (0.50)</text>
+  <text x="550" y="953" text-anchor="middle" class="small">Monte Carlo simulation based on the preprocessed NSCLC radiogenomics dataset</text>
+
+  <line x1="550" y1="970" x2="550" y2="1015" class="arrow"/>
+
+  <rect x="320" y="1015" width="460" height="80" rx="6" class="box"/>
+  <text x="550" y="1050" text-anchor="middle" class="subtitle">7. Split Each Simulated Dataset</text>
+  <text x="550" y="1077" text-anchor="middle" class="label">70% training set · 30% test set</text>
+
+  <line x1="550" y1="1095" x2="550" y2="1140" class="arrow"/>
+
+  <rect x="80" y="1140" width="300" height="120" rx="6" class="box"/>
+  <text x="230" y="1175" text-anchor="middle" class="subtitle">8. Feature Selection</text>
+  <text x="230" y="1203" text-anchor="middle" class="label">No selection</text>
+  <text x="230" y="1228" text-anchor="middle" class="label">AUC-based filtering (&gt; 0.60)</text>
+  <text x="230" y="1253" text-anchor="middle" class="label">RFE</text>
+
+  <rect x="400" y="1140" width="300" height="120" rx="6" class="box"/>
+  <text x="550" y="1175" text-anchor="middle" class="subtitle">9. Model Development</text>
+  <text x="550" y="1203" text-anchor="middle" class="label">Elastic Net · Random Forest · SVM · XGBoost</text>
+  <text x="550" y="1228" text-anchor="middle" class="small">5-fold cross-validation + hyperparameter tuning</text>
+
+  <rect x="720" y="1140" width="300" height="120" rx="6" class="box"/>
+  <text x="870" y="1175" text-anchor="middle" class="subtitle">10. Test Evaluation</text>
+  <text x="870" y="1203" text-anchor="middle" class="label">Sensitivity · Specificity · PPV · NPV</text>
+  <text x="870" y="1228" text-anchor="middle" class="small">Balanced accuracy · F1 score · MCC</text>
+
+  <line x1="550" y1="1260" x2="550" y2="1310" class="arrow"/>
+
+  <rect x="220" y="1310" width="660" height="95" rx="6" class="box"/>
+  <text x="550" y="1345" text-anchor="middle" class="subtitle">11. Repeat and Summarize</text>
+  <text x="550" y="1373" text-anchor="middle" class="label">250 Monte Carlo iterations</text>
+  <text x="550" y="1397" text-anchor="middle" class="small">Compare mean test-set performance across scenarios, feature strategies, modalities, and algorithms</text>
+
+  <line x1="550" y1="1405" x2="550" y2="1450" class="arrow"/>
+
+  <rect x="260" y="1450" width="580" height="40" rx="6" class="box"/>
+  <text x="550" y="1477" text-anchor="middle" class="label">12. Interpret whether multimodal integration improves histology classification</text>
+</svg>
