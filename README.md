@@ -6,5 +6,6 @@ In addition, the repository includes a **RadioGenomics_RAG** folder. This folder
 - A chunked version of the manuscript used for retrieval augmented generation
 - An OpenClaw agent setup guide
 - Example prompts and generated outputs (including reasoning-based framework generation)
+- A SKILL.md file defining a reusable agent skill, which enables automated extraction of the study structure, generation of a conceptual framework and methodological pipeline.
 
 This component illustrates how AI agents can be integrated into scientific workflows to enhance interpretability, reproducibility, and automated knowledge extraction.
