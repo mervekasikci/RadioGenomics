@@ -53,11 +53,56 @@ Launch the OpenClaw terminal interface:
 openclaw tui
 
 --------------------------------------------------
-5. AUTHENTICATE MODEL (OPENAI)
+5. MODEL SETUP
 --------------------------------------------------
+
+OpenClaw supports both cloud-based (OpenAI) and local/open-source models.
+
+---------------------------
+A) OPENAI MODELS (CLOUD)
+---------------------------
 
 Login to OpenAI provider:
 
 openclaw models auth login --provider openai
 
+This enables access to OpenAI-hosted models via API.
+
+---------------------------
+B) LOCAL / OPEN-SOURCE MODELS (OLLAMA)
+---------------------------
+
+OpenClaw can also be used with locally hosted models through Ollama.
+Examples include Phi4, qwen3-vl:8b, and gpt-oss-20b, depending on hardware capacity.
+
+Install Ollama:
+
+brew install ollama
+
+Start Ollama:
+
+ollama serve
+
+In a new terminal window, download models:
+
+ollama pull phi4
+ollama pull qwen3-vl:8b
+ollama pull gpt-oss:20b
+
+Check installed models:
+
+ollama list
+
+Run a quick test:
+
+ollama run phi4
+ollama run qwen3-vl:8b
+ollama run gpt-oss:20b
+
 --------------------------------------------------
+NOTE
+--------------------------------------------------
+
+- OpenAI models require authentication via API key.
+- Local models (Phi-4, Qwen, gpt-oss-20b) run on your machine and do not require OpenAI authentication.
+- Local deployment provides better data privacy but depends on available computational resources.
